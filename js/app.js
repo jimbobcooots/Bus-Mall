@@ -6,6 +6,10 @@ Picture.allPictures = [];
 //array that contains the previous three indices we generated for our image instances
 Picture.previousRandomImages = [];
 
+//array that contains number of occurrences of each instance
+Picture.timesDisplayed = [];
+console.log(Picture.timesDisplayed);
+
 //Here we access our image elements from the DOM
 var imgElementOne = document.getElementById('pic-one');
 var imgElementTwo = document.getElementById('pic-two');
@@ -14,6 +18,7 @@ var imgElementThree = document.getElementById('pic-three');
 function Picture(filepath, name) {
   this.filepath = filepath;
   this.name = name;
+  this.timesDisplayed = 0;
   Picture.allPictures.push(this);
 }
 

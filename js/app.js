@@ -3,6 +3,9 @@
 //array that will hold each Picture
 Picture.allPictures = [];
 
+//array that contains the previous three indices we generated for our image instances
+Picture.previousRandomImages = [];
+
 //Here we access our image elements from the DOM
 var imgElementOne = document.getElementById('pic-one');
 var imgElementTwo = document.getElementById('pic-two');
@@ -47,31 +50,40 @@ function threeRandomImages() {
   var randomIndexThree = Math.floor(Math.random() * Picture.allPictures.length);
 
   //what do we want our condition to be, we want to loop until randomIndexOne, randomIndexTwo, and randomIndexThree DO NOT equal each other
+  
   //we also want to loop until the next cycle of three random numbers is UNIQUE from the previous three (this is where we use includes())
-  while(randomIndexOne === randomIndexTwo || randomIndexTwo === randomIndexThree || randomIndexOne === randomIndexThree) {
-  //PSEUDO: until randomIndexOne(Two,Three) !== each other, keep generating random numbers for each var
-  var randomIndexOne = Math.floor(Math.random() * Picture.allPictures.length);
+  
+  while(randomIndexOne === randomIndexTwo || randomIndexTwo === randomIndexThree || randomIndexOne === randomIndexThree || Picture.previousRandomImages.includes(randomIndexOne) || Picture.previousRandomImages.includes(randomIndexTwo) || Picture.previousRandomImages.includes(randomIndexThree)) {
+  //PSEUDO: until randomIndexOne(Two,Three) !== each other or until our three index images do not equal the array of , keep generating random numbers for each var
+    randomIndexOne = Math.floor(Math.random() * Picture.allPictures.length);
 
-  var randomIndexTwo = Math.floor(Math.random() * Picture.allPictures.length);
+    randomIndexTwo = Math.floor(Math.random() * Picture.allPictures.length);
 
-  var randomIndexThree = Math.floor(Math.random() * Picture.allPictures.length);
+    randomIndexThree = Math.floor(Math.random() * Picture.allPictures.length);
 
     //Now we have three random images, but there is a chance they could be the same num
 
     //we also want to set these variables equal to our imgElement variables within our HTML doc
 
   }
-    //After our 'while' loop has run, we want to display the three nums we got on the page
+  
+  Picture.previousRandomImages = [];
+  //we are pushing our random numbers into our previous random images array
+  Picture.previousRandomImages.push(randomIndexOne);
+  Picture.previousRandomImages.push(randomIndexTwo);
+  Picture.previousRandomImages.push(randomIndexThree);
+  // console.log(previousRandomImages);
+  //After our 'while' loop has run, we want to display the three nums we got on the page
     
-    imgElementOne.src = Picture.allPictures[randomIndexOne].filepath;
-    imgElementOne.alt = Picture.allPictures[randomIndexOne].name;
-    //we are setting the 'src' of imgElementOne to the filepath of our instances constructor and we are setting its 'alt' to the instances constructor name PROPERTY
+  //we are setting the 'src' of imgElementOne to the filepath of our instances constructor and we are setting its 'alt' to the instances constructor name PROPERTY
+  imgElementOne.src = Picture.allPictures[randomIndexOne].filepath;
+  imgElementOne.alt = Picture.allPictures[randomIndexOne].name;
 
-    imgElementTwo.src = Picture.allPictures[randomIndexTwo].filepath;
-    imgElementTwo.alt = Picture.allPictures[randomIndexTwo].name;
+  imgElementTwo.src = Picture.allPictures[randomIndexTwo].filepath;
+  imgElementTwo.alt = Picture.allPictures[randomIndexTwo].name;
 
-    imgElementThree.src = Picture.allPictures[randomIndexThree].filepath;
-    imgElementThree.alt = Picture.allPictures[randomIndexThree].name;
+  imgElementThree.src = Picture.allPictures[randomIndexThree].filepath;
+  imgElementThree.alt = Picture.allPictures[randomIndexThree].name;
 }
 
 imgElementOne.addEventListener('click', threeRandomImages);

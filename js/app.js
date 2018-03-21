@@ -3,22 +3,21 @@
 //array that will hold each Picture
 Picture.allPictures = [];
 
-//create an element for the section, this will handle an event listener for all its children
+//grab image section
 var sectionElement = document.getElementById('image-section');
 
 //three previous images array
 Picture.previousRandomImages = [];
 
+//total picture votes
+var picVotes = [];
+
 //total votes/clicks
-var maxClicks = 10;
+var maxClicks = 5;
 Picture.clicks = 0;
 
 //unorder list element
 var ulElement = document.getElementById('results');
-
-//TABLE DATA VARIABLES
-var picVotes = [];
-var picNames = [];
 
 //Here we access our image elements from the DOM
 var imgElementOne = document.getElementById('pic-one');
@@ -44,7 +43,6 @@ function setUpPictures() {
     console.log('Picture.allPictures loaded from local storage');
     return;
   }
-}
 
   new Picture('assets/sweep.png', 'Baby Sweep');
   new Picture('assets/banana.jpg', 'Banana Slicer');
@@ -67,6 +65,7 @@ function setUpPictures() {
   new Picture('assets/usb.gif', 'Tentacle USB');
   new Picture('assets/bathroom.jpg', 'Toilet Paper Tablet');
   new Picture('assets/unicorn.jpg', 'Unicorn Meat');
+}
 
 function threeRandomImages() {
   var randomIndexOne = Math.floor(Math.random() * Picture.allPictures.length);
@@ -118,8 +117,6 @@ function handleClick(event) {
 
     displayResults();
 
-    chartVotes();
-
     renderChart();
 
   } else {
@@ -138,14 +135,6 @@ function displayResults() {
   }
 }
 
-function chartVotes () {
-  for(var i in Picture.allPictures) {
-    picVotes.push(Picture.allPictures[i].votes);
-  }
-}
-
-  var colorArray = [];
-
 function toggleEventListener() {
   if(Picture.clicks > maxClicks) {
     sectionElement.removeEventListener('click', handleClick);
@@ -154,28 +143,53 @@ function toggleEventListener() {
   }
 }
 
-// use Chart.js to create a bar chart
+function chartVotes () {
+  for(var i in Picture.allPictures) {
+    picVotes[i] = Picture.allPictures[i].votes;
+  }
+}
+
 function renderChart() {
+  var colors = [];
+  var votePercent = [];
+  var labels =[];
+    
+  for(var i in Picture.allPictures) {
+    if (Picture.allPictures[i].timesDisplayed) {
+      labels.push(Picture.allPictures[i].name);
+      
+      var pct = Math.round(Picture.allPictures[i].votes/Picture.allPictures[i].timesDisplayed * 100);
+      
+      votePercent.push(pct);
+      
+      //random hex color
+      var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+      colors.push(randomColor);
+    }
+  }
+
   // access the canvas element from the DOM
   var context = document.getElementById('image-chart').getContext('2d');
-  
+
   new Chart(context, {
-    type: 'pie',
+    type: 'bar',
     data: {
-      labels: picNames,
+      labels: labels,
       datasets: [{
-        label: 'Votes Per Pic',
-        data: picVotes,
-        backgroundColor: colorArray,
+        label: 'Popularity (Click/Times Displayed %)',
+        data: votePercent,
+        backgroundColor: colors,
       }]
     },
     options: {
       scales: {
+        xAxes: [{
+          stacked: true
+        }],
         yAxes: [{
-          ticks: {
+          stacked: true,
             beginAtZero: true
-          }
-        }]
+          }]
       }
     }
   });
@@ -194,6 +208,9 @@ setUpPictures();
 
 //turn on event listener
 toggleEventListener();
+
+//push votes into our global variable, picVotes array
+chartVotes();
 
 //browser opens with three random images
 threeRandomImages();

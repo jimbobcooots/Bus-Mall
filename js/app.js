@@ -9,8 +9,9 @@ var sectionElement = document.getElementById('image-section');
 //three previous images array
 Picture.previousRandomImages = [];
 
-//click tracker
-Picture.totalClicks = 0;
+//total votes/clicks
+var maxClicks = 10;
+Picture.clicks = 0;
 
 //unorder list element
 var ulElement = document.getElementById('results');
@@ -33,77 +34,54 @@ function Picture(filepath, name) {
   picNames.push(this.name);
 }
 
-/* WHEN TO STORE
-- Immediately
-  - Pro: they are there for next time
-  - Con: zeroes
-- At the very end
-  - Pro: stores all the values of clicks and views
-  - Con: partial data is not captured
-- After a load or after a click
-  - Pro: You're saving storage at every instance of an event
-  - Con: Potential scale issue with huge data
-         Chatter
-  */
-
 //These are our image instances
-// function setUpPictures() {
+function setUpPictures() {
+  //setting up a key name
+  var picsAsString = localStorage.getItem('pictures');
+  var usablePics = JSON.parse(picsAsString);
+  if (usablePics && usablePics.length) { //if usablePics exists && if it has a length then {
+    Picture.allPictures = usablePics;
+    console.log('Picture.allPictures loaded from local storage');
+    return;
+  }
+}
 
-//   var picsAsString = localStorage.getItem('pictures');
-//   var usablePics = JSON.parse(picsAsString);
-//   if (usablePics && usablePics.length) { //if usablePics exists && if it has a length then {
-//     Picture.allPictures = usablePics;
-//     console.log('Picture.allPictures loaded from local storage');
-//   }
-
-  new Picture('assets/bag.jpg', 'R2D2 Bag');
-  new Picture('assets/banana.jpg', 'Banana Slicer');
-  new Picture('assets/bathroom.jpg', 'Toilet Paper Tablet');
-  new Picture('assets/boots.jpg', 'RainBoot Sandals');
-  new Picture('assets/breakfast.jpg', 'Breakfast-Maker');
-  new Picture('assets/bubblegum.jpg', 'Meatball Bubblegum');
-  new Picture('assets/chair.jpg', 'Outie Chair');
-  new Picture('assets/cthulhu.jpg', 'Cthulhu');
-  new Picture('assets/dog-duck.jpg', 'Duck Mouth for Dogs');
-  new Picture('assets/dragon.jpg', 'Dragon Meat');
-  new Picture('assets/pen.jpg', 'Pen Utensils');
-  new Picture('assets/pet-sweep.jpg', 'Paw Sweeps');
-  new Picture('assets/scissors.jpg', 'Pizza Scissors');
-  new Picture('assets/shark.jpg', 'Shark Sleeping Bag');
   new Picture('assets/sweep.png', 'Baby Sweep');
-  new Picture('assets/tauntaun.jpg', 'Tauntaun Sleeping Bag');
-  new Picture('assets/unicorn.jpg', 'Unicorn Meat');
-  new Picture('assets/usb.gif', 'Tentacle USB');
-  new Picture('assets/water-can.jpg', 'Reverse Watering Can');
+  new Picture('assets/banana.jpg', 'Banana Slicer');
+  new Picture('assets/breakfast.jpg', 'Breakfast-Maker');
+  new Picture('assets/cthulhu.jpg', 'Cthulhu');
+  new Picture('assets/dragon.jpg', 'Dragon Meat');
+  new Picture('assets/dog-duck.jpg', 'Duck Mouth for Dogs');
+  new Picture('assets/bubblegum.jpg', 'Meatball Bubblegum');
   new Picture('assets/wine-glass.jpg', 'Modern Wine Glass');
-// }
+  new Picture('assets/chair.jpg', 'Outie Chair');
+  new Picture('assets/pet-sweep.jpg', 'Paw Sweeps');
+  new Picture('assets/pen.jpg', 'Pen Utensils');
+  new Picture('assets/scissors.jpg', 'Pizza Scissors');
+  new Picture('assets/bag.jpg', 'R2D2 Bag');
+  new Picture('assets/boots.jpg', 'RainBoot Sandals');
+  new Picture('assets/water-can.jpg', 'Reverse Watering Can');
+  new Picture('assets/shark.jpg', 'Shark Sleeping Bag');
+  
+  new Picture('assets/tauntaun.jpg', 'Tauntaun Sleeping Bag');
+  new Picture('assets/usb.gif', 'Tentacle USB');
+  new Picture('assets/bathroom.jpg', 'Toilet Paper Tablet');
+  new Picture('assets/unicorn.jpg', 'Unicorn Meat');
 
-//we want to randomly display three of our instances
 function threeRandomImages() {
-  //we are establishing three random number variables
-  //They are generating a number between 0 and 1, mulitplying that num by the length of our instances constructor, then rounding the num
   var randomIndexOne = Math.floor(Math.random() * Picture.allPictures.length);
 
   var randomIndexTwo = Math.floor(Math.random() * Picture.allPictures.length);
 
   var randomIndexThree = Math.floor(Math.random() * Picture.allPictures.length);
-
-  //what do we want our condition to be, we want to loop until randomIndexOne, randomIndexTwo, and randomIndexThree DO NOT equal each other
-  
-  //we also want to loop until the next cycle of three random numbers is UNIQUE from the previous three (this is where we use includes())
   
   while(randomIndexOne === randomIndexTwo || randomIndexTwo === randomIndexThree || randomIndexOne === randomIndexThree || Picture.previousRandomImages.includes(randomIndexOne) || Picture.previousRandomImages.includes(randomIndexTwo) || Picture.previousRandomImages.includes(randomIndexThree)) {
-  //PSEUDO: until randomIndexOne(Two,Three) !== each other or until our three index images do not equal the array of , keep generating random numbers for each var
+
     randomIndexOne = Math.floor(Math.random() * Picture.allPictures.length);
 
     randomIndexTwo = Math.floor(Math.random() * Picture.allPictures.length);
 
     randomIndexThree = Math.floor(Math.random() * Picture.allPictures.length);
-
-    //Now we have three random images, but there is a chance they could be the same num
-
-    //we also want to set these variables equal to our imgElement variables within our HTML doc
-
   }
   
   Picture.previousRandomImages = [];
@@ -111,17 +89,11 @@ function threeRandomImages() {
   Picture.previousRandomImages.push(randomIndexOne);
   Picture.previousRandomImages.push(randomIndexTwo);
   Picture.previousRandomImages.push(randomIndexThree);
-  // console.log(previousRandomImages);
-  //After our 'while' loop has run, we want to display the three nums we got on the page
 
   Picture.allPictures[randomIndexOne].timesDisplayed++;
   Picture.allPictures[randomIndexTwo].timesDisplayed++;
   Picture.allPictures[randomIndexThree].timesDisplayed++;
-  //What is this saying? The property of timesDisplayed of the index (which is one of our image instances) of our array of objects increments +1 when it is displayed. 
-  //Whatever number enters our randomIndexes will be incremented at its own index position
-  console.log(Picture.allPictures[randomIndexOne].timesDisplayed++);
-    
-  //we are setting the 'src' of imgElementOne to the filepath of our instances constructor and we are setting its 'alt' to the instances constructor name PROPERTY
+  
   imgElementOne.src = Picture.allPictures[randomIndexOne].filepath;
   imgElementOne.alt = Picture.allPictures[randomIndexOne].name;
 
@@ -131,26 +103,18 @@ function threeRandomImages() {
   imgElementThree.src = Picture.allPictures[randomIndexThree].filepath;
   imgElementThree.alt = Picture.allPictures[randomIndexThree].name;
 }
-//threeRandomImages
-// 1. we have generated three random, unique images
-// 2. we have made it so that each set of three images is unique from the previous set
-// 3. we have displayed those images in our document
-// 4. we have counted for each image instance how many times it is displayed randomly
 
-function clickCounter(event) {
-  Picture.totalClicks++ //every time our event occurs we increment our totalClicks number
+function handleClick(event) {
+  Picture.clicks++ //every time our event occurs we increment our totalClicks number
 
   for(var i in Picture.allPictures) {
     if(event.target.alt === Picture.allPictures[i].name) {
       Picture.allPictures[i].votes++;
-      //if the event we target is === to the name of our instance in our allPictures array, then add to the vote total of that instance
     }
   }
 
-  //outside the for loop
-  if(Picture.totalClicks > 5) {
-    sectionElement.removeEventListener('click', clickCounter);
-    //if the amount of clicks equals 5, then display the results
+  if(Picture.clicks > maxClicks) {
+    sectionElement.removeEventListener('click', handleClick);
 
     displayResults();
 
@@ -180,21 +144,29 @@ function chartVotes () {
   }
 }
 
+  var colorArray = [];
+
+function toggleEventListener() {
+  if(Picture.clicks > maxClicks) {
+    sectionElement.removeEventListener('click', handleClick);
+  } else {
+    sectionElement.addEventListener('click', handleClick);
+  }
+}
+
 // use Chart.js to create a bar chart
 function renderChart() {
   // access the canvas element from the DOM
   var context = document.getElementById('image-chart').getContext('2d');
-
-  var arrayOfColors = ['#000', '#000', '#000', '#000', '#000'];
-
+  
   new Chart(context, {
-    type: 'bar',
+    type: 'pie',
     data: {
       labels: picNames,
       datasets: [{
         label: 'Votes Per Pic',
         data: picVotes,
-        backgroundColor: '#000',
+        backgroundColor: colorArray,
       }]
     },
     options: {
@@ -209,10 +181,19 @@ function renderChart() {
   });
 }
 
-// setUpPictures();
+function saveToLS() {
+  var savePictures = JSON.stringify(Picture.allPictures); //converting our Picture.allPictures array to JSON string
+  localStorage.setItem('pictures', savePictures); //setting a key-value pair in our localStorage
 
-sectionElement.addEventListener('click', clickCounter);
+  toggleEventListener();
+  renderChart();
+}
+
+//create picture list in JSON
+setUpPictures();
+
+//turn on event listener
+toggleEventListener();
 
 //browser opens with three random images
 threeRandomImages();
-

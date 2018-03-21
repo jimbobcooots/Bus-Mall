@@ -12,6 +12,14 @@ Picture.previousRandomImages = [];
 //click tracker
 Picture.totalClicks = 0;
 
+//unorder list element
+var ulElement = document.createElement('ul');
+
+//TABLE DATA VARIABLES
+var picVotes = [];
+
+var picNames = [];
+
 //Here we access our image elements from the DOM
 var imgElementOne = document.getElementById('pic-one');
 var imgElementTwo = document.getElementById('pic-two');
@@ -115,7 +123,29 @@ function clickCounter (event) {
       //if the event we target is === to the name of our instance in our allPictures array, then add to the vote total of that instance
     }
   }
+
+  //outside the for loop
+  if(Picture.totalClicks > 5) {
+    sectionElement.removeEventListener('click', clickCounter);
+    //if the amount of clicks equals 5, then display the results
+
+    displayResults();
+  }
 }
+
+function displayResults() {
+  for(var i in Picture.allPictures) {
+    var listItemElement = document.createElement('li');
+    //we create a list element to display our results in
+
+    listItemElement.textContent = Picture.allPictures[i].name, 'has', Picture.allPictures[i].votes, 'votes and was displayed', Picture.allPictures[i].timesDisplayed, 'times';
+  }
+  
+  ulElement.appendChild(listItemElement);
+
+}
+
+function
 
 
 //clickCounter

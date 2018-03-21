@@ -6,18 +6,17 @@ Picture.allPictures = [];
 //create an element for the section, this will handle an event listener for all its children
 var sectionElement = document.getElementById('image-section');
 
-//array that contains the previous three indices we generated for our image instances
+//three previous images array
 Picture.previousRandomImages = [];
 
 //click tracker
 Picture.totalClicks = 0;
 
 //unorder list element
-var ulElement = document.createElement('ul');
+var ulElement = document.getElementById('results');
 
 //TABLE DATA VARIABLES
 var picVotes = [];
-
 var picNames = [];
 
 //Here we access our image elements from the DOM
@@ -31,29 +30,53 @@ function Picture(filepath, name) {
   this.votes = 0;
   this.timesDisplayed = 0;
   Picture.allPictures.push(this);
+  picNames.push(this.name);
 }
 
+/* WHEN TO STORE
+- Immediately
+  - Pro: they are there for next time
+  - Con: zeroes
+- At the very end
+  - Pro: stores all the values of clicks and views
+  - Con: partial data is not captured
+- After a load or after a click
+  - Pro: You're saving storage at every instance of an event
+  - Con: Potential scale issue with huge data
+         Chatter
+  */
+
 //These are our image instances
-new Picture('assets/bag.jpg', 'Bag');
-new Picture('assets/banana.jpg', 'Banana');
-new Picture('assets/bathroom.jpg', 'Bathroom');
-new Picture('assets/boots.jpg', 'Boots');
-new Picture('assets/breakfast.jpg', 'Breakfast');
-new Picture('assets/bubblegum.jpg', 'Bubblegum');
-new Picture('assets/chair.jpg', 'Chair');
-new Picture('assets/cthulhu.jpg', 'Cthulhu');
-new Picture('assets/dog-duck.jpg', 'Dog-Duck');
-new Picture('assets/dragon.jpg', 'Dragon');
-new Picture('assets/pen.jpg', 'Pen');
-new Picture('assets/pet-sweep.jpg', 'Pet-Sweep');
-new Picture('assets/scissors.jpg', 'Scissors');
-new Picture('assets/shark.jpg', 'Shark');
-new Picture('assets/sweep.png', 'Sweep');
-new Picture('assets/tauntaun.jpg', 'Tauntaun');
-new Picture('assets/unicorn.jpg', 'Unicorn');
-new Picture('assets/usb.gif', 'USB');
-new Picture('assets/water-can.jpg', 'Water-Can');
-new Picture('assets/wine-glass.jpg', 'Wine-Glass');
+// function setUpPictures() {
+
+//   var picsAsString = localStorage.getItem('pictures');
+//   var usablePics = JSON.parse(picsAsString);
+//   if (usablePics && usablePics.length) { //if usablePics exists && if it has a length then {
+//     Picture.allPictures = usablePics;
+//     console.log('Picture.allPictures loaded from local storage');
+//   }
+
+  new Picture('assets/bag.jpg', 'R2D2 Bag');
+  new Picture('assets/banana.jpg', 'Banana Slicer');
+  new Picture('assets/bathroom.jpg', 'Toilet Paper Tablet');
+  new Picture('assets/boots.jpg', 'RainBoot Sandals');
+  new Picture('assets/breakfast.jpg', 'Breakfast-Maker');
+  new Picture('assets/bubblegum.jpg', 'Meatball Bubblegum');
+  new Picture('assets/chair.jpg', 'Outie Chair');
+  new Picture('assets/cthulhu.jpg', 'Cthulhu');
+  new Picture('assets/dog-duck.jpg', 'Duck Mouth for Dogs');
+  new Picture('assets/dragon.jpg', 'Dragon Meat');
+  new Picture('assets/pen.jpg', 'Pen Utensils');
+  new Picture('assets/pet-sweep.jpg', 'Paw Sweeps');
+  new Picture('assets/scissors.jpg', 'Pizza Scissors');
+  new Picture('assets/shark.jpg', 'Shark Sleeping Bag');
+  new Picture('assets/sweep.png', 'Baby Sweep');
+  new Picture('assets/tauntaun.jpg', 'Tauntaun Sleeping Bag');
+  new Picture('assets/unicorn.jpg', 'Unicorn Meat');
+  new Picture('assets/usb.gif', 'Tentacle USB');
+  new Picture('assets/water-can.jpg', 'Reverse Watering Can');
+  new Picture('assets/wine-glass.jpg', 'Modern Wine Glass');
+// }
 
 //we want to randomly display three of our instances
 function threeRandomImages() {
@@ -114,7 +137,7 @@ function threeRandomImages() {
 // 3. we have displayed those images in our document
 // 4. we have counted for each image instance how many times it is displayed randomly
 
-function clickCounter (event) {
+function clickCounter(event) {
   Picture.totalClicks++ //every time our event occurs we increment our totalClicks number
 
   for(var i in Picture.allPictures) {
@@ -130,34 +153,66 @@ function clickCounter (event) {
     //if the amount of clicks equals 5, then display the results
 
     displayResults();
+
+    chartVotes();
+
+    renderChart();
+
+  } else {
+
+    threeRandomImages();
   }
 }
 
 function displayResults() {
   for(var i in Picture.allPictures) {
     var listItemElement = document.createElement('li');
-    //we create a list element to display our results in
 
-    listItemElement.textContent = Picture.allPictures[i].name, 'has', Picture.allPictures[i].votes, 'votes and was displayed', Picture.allPictures[i].timesDisplayed, 'times';
+    listItemElement.textContent = Picture.allPictures[i].name + ' has ' + Picture.allPictures[i].votes + ' votes and was displayed ' + Picture.allPictures[i].timesDisplayed + ' times.';
+
+    ulElement.appendChild(listItemElement);
   }
-  
-  ulElement.appendChild(listItemElement);
-
 }
 
-function
+function chartVotes () {
+  for(var i in Picture.allPictures) {
+    picVotes.push(Picture.allPictures[i].votes);
+  }
+}
 
+// use Chart.js to create a bar chart
+function renderChart() {
+  // access the canvas element from the DOM
+  var context = document.getElementById('image-chart').getContext('2d');
 
-//clickCounter
-//1. we want a function that counts how many times we've clicked on an instance and stores that count into a property of our constructor object 
-//we also want the function to turn off the event listener at 25 clicks and display our results
+  var arrayOfColors = ['#000', '#000', '#000', '#000', '#000'];
 
-//a function that adds an event listener to each image so that when it is clicked, it triggers a new set of three, random images (threeRandomImages)
-// it triggers a new imgElementOne, Two and Three
+  new Chart(context, {
+    type: 'bar',
+    data: {
+      labels: picNames,
+      datasets: [{
+        label: 'Votes Per Pic',
+        data: picVotes,
+        backgroundColor: '#000',
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+
+// setUpPictures();
 
 sectionElement.addEventListener('click', clickCounter);
-sectionElement.addEventListener('click', threeRandomImages);
 
-
+//browser opens with three random images
 threeRandomImages();
 

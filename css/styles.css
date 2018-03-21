@@ -1,4 +1,10 @@
+body ul {
+  display: block;
+  position: relative;
+}
 body img {
+  display: inline-block;
+  float: right;
   height: 200px;
   width: auto;
 }

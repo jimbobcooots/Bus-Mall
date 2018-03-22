@@ -103,6 +103,21 @@ function threeRandomImages() {
   imgElementThree.alt = Picture.allPictures[randomIndexThree].name;
 }
 
+// // function renderImageTags () {
+// //   for(var i = 0; i < 3; i++) {
+// //     var card = document.createElement('div');
+// //     var figure = document.createElement('figure');
+// //     var figcaption = document.createElement('figcaption');
+// //     imgElementOne.id = 'picture' + i;
+
+
+//     figure.appendChild(image);
+//     figure.appendChild(figcaption);
+//     card.appendChild(figure);
+//     sectionElement.appendChild(card);
+//   }
+// }
+
 function handleClick(event) {
   Picture.clicks++ //every time our event occurs we increment our totalClicks number
 
@@ -210,6 +225,9 @@ function saveToLS() {
 
 //create picture list in JSON
 setUpPictures();
+
+// //image tags
+// renderImageTags();
 
 //turn on event listener
 toggleEventListener();

@@ -1,10 +1,37 @@
-body ul {
-  display: block;
-  position: relative;
+* {
+  box-sizing: border-box;
 }
-body img {
-  display: inline-block;
-  float: right;
+
+nav {
+  background-color: rgb(26, 27, 28);
   height: 200px;
-  width: auto;
+  width: 100%;
 }
+
+nav ul li a {
+  color: white;
+  font-family: 'PT Sans', sans-serif;
+  text-decoration: none;
+}
+
+#homepage {
+  background-color: #032ea5;
+  height: 100vh;
+}
+
+#image-section {
+  background-color: #f2f2f2;
+  display: block;
+  height: 400px;
+}
+
+#image-section img {
+  height: auto;
+  margin-left: 13.5%;
+  margin-right: auto;
+  margin-top: 3%;
+  width: 15%;
+}
+
+/* can't resize chart
+/* how do I add the cards around images and add the tags

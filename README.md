@@ -15,4 +15,10 @@ What this script will run
 4. Terminate the click event upon the 25th event and display results
   - An 'if' condition will state that once we hit 25 clicks, to display the results
 5. Produce a chart that displays a visual representation of our results for how many times an item displayed, how many times it was clicked, and the ratio of the times it was clicked over the times it was displayed
+ --------------------------------------------------------------------------------------------
+
+JSON STORAGE
+  - What do we want to store?
+    - Our allPictures array
+  -    
 

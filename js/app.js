@@ -3,22 +3,21 @@
 //array that will hold each Picture
 Picture.allPictures = [];
 
-//create an element for the section, this will handle an event listener for all its children
+//grab image section
 var sectionElement = document.getElementById('image-section');
 
 //three previous images array
 Picture.previousRandomImages = [];
 
+//total picture votes
+var picVotes = [];
+
 //total votes/clicks
-var maxClicks = 10;
+var maxClicks = 5;
 Picture.clicks = 0;
 
 //unorder list element
 var ulElement = document.getElementById('results');
-
-//TABLE DATA VARIABLES
-var picVotes = [];
-var picNames = [];
 
 //Here we access our image elements from the DOM
 var imgElementOne = document.getElementById('pic-one');
@@ -31,7 +30,7 @@ function Picture(filepath, name) {
   this.votes = 0;
   this.timesDisplayed = 0;
   Picture.allPictures.push(this);
-  picNames.push(this.name);
+  // picNames.push(this.name);
 }
 
 //These are our image instances
@@ -44,7 +43,6 @@ function setUpPictures() {
     console.log('Picture.allPictures loaded from local storage');
     return;
   }
-}
 
   new Picture('assets/sweep.png', 'Baby Sweep');
   new Picture('assets/banana.jpg', 'Banana Slicer');
@@ -67,6 +65,7 @@ function setUpPictures() {
   new Picture('assets/usb.gif', 'Tentacle USB');
   new Picture('assets/bathroom.jpg', 'Toilet Paper Tablet');
   new Picture('assets/unicorn.jpg', 'Unicorn Meat');
+}
 
 function threeRandomImages() {
   var randomIndexOne = Math.floor(Math.random() * Picture.allPictures.length);
@@ -104,6 +103,21 @@ function threeRandomImages() {
   imgElementThree.alt = Picture.allPictures[randomIndexThree].name;
 }
 
+// // function renderImageTags () {
+// //   for(var i = 0; i < 3; i++) {
+// //     var card = document.createElement('div');
+// //     var figure = document.createElement('figure');
+// //     var figcaption = document.createElement('figcaption');
+// //     imgElementOne.id = 'picture' + i;
+
+
+//     figure.appendChild(image);
+//     figure.appendChild(figcaption);
+//     card.appendChild(figure);
+//     sectionElement.appendChild(card);
+//   }
+// }
+
 function handleClick(event) {
   Picture.clicks++ //every time our event occurs we increment our totalClicks number
 
@@ -117,8 +131,6 @@ function handleClick(event) {
     sectionElement.removeEventListener('click', handleClick);
 
     displayResults();
-
-    chartVotes();
 
     renderChart();
 
@@ -138,14 +150,6 @@ function displayResults() {
   }
 }
 
-function chartVotes () {
-  for(var i in Picture.allPictures) {
-    picVotes.push(Picture.allPictures[i].votes);
-  }
-}
-
-  var colorArray = [];
-
 function toggleEventListener() {
   if(Picture.clicks > maxClicks) {
     sectionElement.removeEventListener('click', handleClick);
@@ -154,28 +158,58 @@ function toggleEventListener() {
   }
 }
 
-// use Chart.js to create a bar chart
+function chartVotes () {
+  for(var i in Picture.allPictures) {
+    picVotes[i] = Picture.allPictures[i].votes;
+  }
+}
+
 function renderChart() {
+  var colors = [];
+  var votePercent = [];
+  var indicators =[];
+    
+  for(var i in Picture.allPictures) {
+    if (Picture.allPictures[i].timesDisplayed) {
+      indicators.push(Picture.allPictures[i].name);
+      
+      var pct = Math.round(Picture.allPictures[i].votes/Picture.allPictures[i].timesDisplayed * 100);
+      
+      votePercent.push(pct);
+      
+      //random hex color
+      var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+      colors.push(randomColor);
+    }
+  }
+
   // access the canvas element from the DOM
   var context = document.getElementById('image-chart').getContext('2d');
-  
+
+  debugger;
   new Chart(context, {
-    type: 'pie',
+    type: 'bar',
     data: {
-      labels: picNames,
+      labels: indicators,
       datasets: [{
-        label: 'Votes Per Pic',
-        data: picVotes,
-        backgroundColor: colorArray,
+        label: 'Popularity (Click/Times Displayed %)',
+        data: votePercent,
+        backgroundColor: colors,
       }]
     },
     options: {
       scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: false
+          }
+        }],
         yAxes: [{
           ticks: {
+            autoSkip: false,
             beginAtZero: true
-          }
-        }]
+        }
+          }]
       }
     }
   });
@@ -192,8 +226,14 @@ function saveToLS() {
 //create picture list in JSON
 setUpPictures();
 
+// //image tags
+// renderImageTags();
+
 //turn on event listener
 toggleEventListener();
+
+//push votes into our global variable, picVotes array
+chartVotes();
 
 //browser opens with three random images
 threeRandomImages();

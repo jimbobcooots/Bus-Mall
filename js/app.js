@@ -30,7 +30,7 @@ function Picture(filepath, name) {
   this.votes = 0;
   this.timesDisplayed = 0;
   Picture.allPictures.push(this);
-  picNames.push(this.name);
+  // picNames.push(this.name);
 }
 
 //These are our image instances
@@ -152,11 +152,11 @@ function chartVotes () {
 function renderChart() {
   var colors = [];
   var votePercent = [];
-  var labels =[];
+  var indicators =[];
     
   for(var i in Picture.allPictures) {
     if (Picture.allPictures[i].timesDisplayed) {
-      labels.push(Picture.allPictures[i].name);
+      indicators.push(Picture.allPictures[i].name);
       
       var pct = Math.round(Picture.allPictures[i].votes/Picture.allPictures[i].timesDisplayed * 100);
       
@@ -171,10 +171,11 @@ function renderChart() {
   // access the canvas element from the DOM
   var context = document.getElementById('image-chart').getContext('2d');
 
+  debugger;
   new Chart(context, {
     type: 'bar',
     data: {
-      labels: labels,
+      labels: indicators,
       datasets: [{
         label: 'Popularity (Click/Times Displayed %)',
         data: votePercent,
@@ -184,11 +185,15 @@ function renderChart() {
     options: {
       scales: {
         xAxes: [{
-          stacked: true
+          ticks: {
+            autoSkip: false
+          }
         }],
         yAxes: [{
-          stacked: true,
+          ticks: {
+            autoSkip: false,
             beginAtZero: true
+        }
           }]
       }
     }

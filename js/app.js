@@ -127,7 +127,7 @@ function handleClick(event) {
     }
   }
 
-  if(Picture.clicks > maxClicks) {
+  if(Picture.clicks >= maxClicks) {
     sectionElement.removeEventListener('click', handleClick);
 
     displayResults();
@@ -151,7 +151,7 @@ function displayResults() {
 }
 
 function toggleEventListener() {
-  if(Picture.clicks > maxClicks) {
+  if(Picture.clicks >= maxClicks) {
     sectionElement.removeEventListener('click', handleClick);
   } else {
     sectionElement.addEventListener('click', handleClick);

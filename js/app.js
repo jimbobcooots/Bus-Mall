@@ -13,7 +13,7 @@ Picture.previousRandomImages = [];
 var picVotes = [];
 
 //total votes/clicks
-var maxClicks = 5;
+var maxClicks = 10;
 Picture.clicks = 0;
 
 //unorder list element
@@ -30,15 +30,13 @@ function Picture(filepath, name) {
   this.votes = 0;
   this.timesDisplayed = 0;
   Picture.allPictures.push(this);
-  // picNames.push(this.name);
 }
 
 //These are our image instances
 function setUpPictures() {
-  //setting up a key name
   var picsAsString = localStorage.getItem('pictures');
   var usablePics = JSON.parse(picsAsString);
-  if (usablePics && usablePics.length) { //if usablePics exists && if it has a length then {
+  if (usablePics && usablePics.length) { 
     Picture.allPictures = usablePics;
     console.log('Picture.allPictures loaded from local storage');
     return;
@@ -84,7 +82,7 @@ function threeRandomImages() {
   }
   
   Picture.previousRandomImages = [];
-  //we are pushing our random numbers into our previous random images array
+  //pushing our random numbers into our previous random images array
   Picture.previousRandomImages.push(randomIndexOne);
   Picture.previousRandomImages.push(randomIndexTwo);
   Picture.previousRandomImages.push(randomIndexThree);
@@ -103,23 +101,8 @@ function threeRandomImages() {
   imgElementThree.alt = Picture.allPictures[randomIndexThree].name;
 }
 
-// // function renderImageTags () {
-// //   for(var i = 0; i < 3; i++) {
-// //     var card = document.createElement('div');
-// //     var figure = document.createElement('figure');
-// //     var figcaption = document.createElement('figcaption');
-// //     imgElementOne.id = 'picture' + i;
-
-
-//     figure.appendChild(image);
-//     figure.appendChild(figcaption);
-//     card.appendChild(figure);
-//     sectionElement.appendChild(card);
-//   }
-// }
-
 function handleClick(event) {
-  Picture.clicks++ //every time our event occurs we increment our totalClicks number
+  Picture.clicks++
 
   for(var i in Picture.allPictures) {
     if(event.target.alt === Picture.allPictures[i].name) {
@@ -186,14 +169,15 @@ function renderChart() {
   // access the canvas element from the DOM
   var context = document.getElementById('image-chart').getContext('2d');
 
-  debugger;
   new Chart(context, {
     type: 'bar',
     data: {
       labels: indicators,
       datasets: [{
-        label: 'Popularity (Click/Times Displayed %)',
+        label: 'Total Votes',
         data: votePercent,
+        borderWidth: 3,
+        borderColor: colors,
         backgroundColor: colors,
       }]
     },
@@ -223,11 +207,9 @@ function saveToLS() {
   renderChart();
 }
 
+
 //create picture list in JSON
 setUpPictures();
-
-// //image tags
-// renderImageTags();
 
 //turn on event listener
 toggleEventListener();
@@ -237,3 +219,4 @@ chartVotes();
 
 //browser opens with three random images
 threeRandomImages();
+

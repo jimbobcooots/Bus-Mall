@@ -2,36 +2,164 @@
   box-sizing: border-box;
 }
 
-nav {
+body {
+  font-family: 'PT Sans', sans-serif;
+}
+
+header {
   background-color: rgb(26, 27, 28);
   height: 200px;
+  position: fixed;
   width: 100%;
 }
 
+.header-logo img {
+  cursor: pointer;
+  height: auto;
+  margin-left: 2em;
+  position: relative;
+  top: 1.5em;
+  width: 8em;
+}
+
+nav ul {
+  margin-left: 7em;
+}
+
+nav ul li {
+  display: inline-block;
+  left: 40px;
+  position: relative;
+  top: 45px;
+}
+
 nav ul li a {
-  color: white;
-  font-family: 'PT Sans', sans-serif;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  margin-left: 5em;
   text-decoration: none;
 }
 
-#homepage {
+nav ul li a:hover {
+  border-bottom: 2px solid #ffcc00;
+}
+
+.login-cart-buttons {
+  float: right;
+  margin-right: 25px;
+  margin-top: -150px;
+}
+
+.user {
   background-color: #032ea5;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  height: 35px;
+  margin-right: 5px;
+  width: 95px;
+}
+
+.cart-button {
+  background-color: #ffcc00;
+  color: rgb(26, 27, 28);
+  cursor: pointer;
+  font-size: 14px;
+  height: 35px;
+  margin-left: 30px;
+  width: 95px;
+}
+
+.search-container {
+  bottom: 5em;
+  left: 13em;
+  position: relative;
+}
+
+.search-container input {
+  font-size: 16px;
+  height: 3em;
+  width: 27em;
+}
+
+.search-container button {
+  background-color: #032ea5;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  height: 3em;
+  position: absolute;
+  width: 8em;
+}
+
+/* .background-overlay {
+  background-color: #032ea5;
+  height: 100vh;
+  z-index: 99;
+} */
+
+#top-section {
+  background-image: url("bus-background.jpg");
+  background-size: 100%;
   height: 100vh;
 }
 
 #image-section {
   background-color: #f2f2f2;
   display: block;
-  height: 400px;
+  height: 350px;
+}
+
+#image-section h1 {
+  font-size: 35px;
+  font-weight: bold;
+  position: relative;
+  text-align: center;
+  top: 30px;
+ 
 }
 
 #image-section img {
-  height: auto;
-  margin-left: 13.5%;
-  margin-right: auto;
-  margin-top: 3%;
-  width: 15%;
+  border-radius: 20px;
+  box-shadow: 1px 1px 5px rgb(144, 144, 144);
+  cursor: pointer;
+  display: inline-block;
+  height: 200px;
+  margin-left: 185px;
+  margin-top: 75px;
+  width: 225px;
 }
+
+#image-section img:hover {
+  border: 5px solid #ffcc00;
+}
+
+.chart {
+  height: 60%;
+  float: right;
+  margin-right: 30px;
+  margin-top: 30px;
+  width: 60%;
+}
+
+#results {
+  font-size: 14px;
+  line-height: 1.5;
+  list-style-type: disc;
+  margin-bottom: 20px;
+  margin-left: 50px;
+  margin-top: 40px;
+}
+
+#results li {
+  border: 1px solid rgb(26, 27, 28, .2);
+  width: 30%;
+}
+
+
+
+
 
 /* can't resize chart
 /* how do I add the cards around images and add the tags
+/* ask John about the webkit box and the formatting of these sites
